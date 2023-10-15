@@ -5,25 +5,23 @@
   import Gallery from "./components/Gallery.svelte";
 
   export let newDate = "";
-
-  let image: NasaResponse = {
-    date: "",
-    explanation: "",
-    hdurl: "",
-    title: "",
-    copyright: "",
-  };
+  let isLoading = false;
+  let image: NasaResponse = {};
 
   onMount(async () => {
+    isLoading=true
     const loadedImage = await loadImage(currentDate);
+    isLoading = false;
     if (!image) return console.error();
-     image = loadedImage;
+    image = loadedImage;
   });
 
   const reload = async () => {
+    isLoading=true
     const loadedImage = await loadImage(newDate);
+    isLoading = false;
     if (!image) return console.error();
-     image = loadedImage;
+    image = loadedImage;
   };
 </script>
 
@@ -35,6 +33,9 @@
 
   <div id="right-sidebar">
     <h1>Yo!</h1>
+    {#if isLoading}
+    <p>Loading...</p>
+    {/if}
     <img src={image.hdurl} alt={image.title} />
     <h2>Title: {image.title}</h2>
     <h3>Copyright: {image.copyright}</h3>
@@ -45,8 +46,7 @@
 </main>
 
 <style>
- 
- #left-sidebar{
+  #left-sidebar {
     float: left;
     width: 20%;
   }

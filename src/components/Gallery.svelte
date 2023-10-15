@@ -1,58 +1,80 @@
 <script lang="ts">
-import http from "axios";
+  import http from "axios";
   import type { NasaResponse } from "../apiCall";
+  let isLoading = false
+  
 
-let startDate = new Date().toISOString().slice(0, 10);
-let endDate = new Date().toISOString().slice(0, 10);
-let galleryImage:NasaResponse[] = []
+  let startDate = new Date().toISOString().slice(0, 10);
+  let endDate = new Date().toISOString().slice(0, 10);
+  let galleryImage: NasaResponse[] = [];
 
-const loadGallery = async (startDate:string,endDate:string) => {
-  const response = await http.get(
-    "https://api.nasa.gov/planetary/apod?api_key=j3HzB7I0cRAep37Ke3G6lCsuoKzXQGswHcsF30Bb&start_date="+ startDate +"&end_date="+endDate);
-
-  if (!response) {
-    return alert("Error in received data");
-  }
-  galleryImage = response.data
-  return galleryImage
-};
+  const loadGallery = async (startDate: string, endDate: string) => {
+    isLoading = true
+    const response = await http.get(
+      "https://api.nasa.gov/planetary/apod?api_key=j3HzB7I0cRAep37Ke3G6lCsuoKzXQGswHcsF30Bb&start_date=" + startDate + "&end_date=" + endDate);
+      isLoading=false
+    if (!response) {
+      return alert("Error in received data");
+    }
+    galleryImage = response.data;
+    return galleryImage;
+  };
 </script>
 
-
 <hr />
-<h2>
-    Gallery of previous photos
-</h2>
+<h2>Gallery of previous photos</h2>
 
-<label>Select start date!
-<input type="date" bind:value={startDate} /></label>
+<label
+  >Select start date!
+  <input type="date" bind:value={startDate} /></label>
 <br />
-<label>Select end date!
-<input type="date"  bind:value={endDate} /></label>
+<label
+  >Select end date!
+  <input type="date" bind:value={endDate} /></label>
 
 <br />
-<button on:click={()=>loadGallery(startDate,endDate)}>GO!</button>
+{#if startDate > endDate}
+<p>StartDate must be before EndDate</p>
+{:else} 
+<button on:click={() => loadGallery(startDate, endDate)}>GO!</button>
+{/if}
 
-{#each galleryImage as image}
 <div class="gallery">
-<img src={image.hdurl} alt={image.title} />
-<h2>Title: {image.title}</h2>
-<h3>
+  {#if isLoading}
+  <p>Loading...</p>
+  {/if}
+  {#each galleryImage as image}
+   <span> <img src={image.hdurl} alt={image.title}/>
+<p>{image.title}</p></span>
+    <!-- <h3>
     {#if (image.copyright)}
     Copyright: {image.copyright}
     {/if}
 </h3>
 <p>{image.explanation}</p>
-<p>{image.date}</p>
-<hr />
+<p>{image.date}</p>-->
+  {/each}
 </div>
-{/each}
 
 <br />
-
 <style>
-img {
-    max-height: 45vh;
-    }
-
-  </style>
+  span {
+    background-color: whitesmoke;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10%;
+  }
+  .gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+  img {
+    width:400px;
+    height:400px;
+    object-fit: cover;
+  }
+</style>
