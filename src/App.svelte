@@ -26,13 +26,12 @@
 </script>
 
 <main>
-  <div id="left-sidebar">
+  <section>
+
     <p>Select date!</p>
     <input type="date" on:change={() => reload()} bind:value={newDate} />
-  </div>
 
-  <div id="right-sidebar">
-    <h1>Yo!</h1>
+    <h1>APOD by NASA</h1>
     {#if isLoading}
     <p>Loading...</p>
     {/if}
@@ -40,17 +39,18 @@
     <h2>Title: {image.title}</h2>
     <h3>Copyright: {image.copyright}</h3>
     <p>{image.explanation}</p>
-  </div>
 
+</section>
   <Gallery />
 </main>
 
 <style>
-  #left-sidebar {
-    float: left;
-    width: 20%;
+section{
+    margin:30px;
+    padding: 20px;
+    border:2px solid grey;
   }
   img {
-    max-height: 75vh;
+    max-width: 50vw;
   }
 </style>

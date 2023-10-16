@@ -21,7 +21,6 @@
   };
 </script>
 
-<hr />
 <h2>Gallery of previous photos</h2>
 
 <label
