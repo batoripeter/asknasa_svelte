@@ -13,17 +13,18 @@ export type NasaResponse = z.infer<typeof NasaResponseSchema>;
 
 export let currentDate = new Date().toISOString().slice(0, 10);
 
-const loadImage = async (currentDate: string) => {
+const loadImage = async (currentDate: string):Promise<NasaResponse | null> => {
   const response = await http.get(
     "https://api.nasa.gov/planetary/apod?api_key=j3HzB7I0cRAep37Ke3G6lCsuoKzXQGswHcsF30Bb&date=" +
       currentDate
   );
   const data: NasaResponse = response.data;
   const result = NasaResponseSchema.safeParse(data);
-
   if (!result.success) {
-    return alert("Error in received data");
+
+    return null
   }
-  return result.data
+  console.log(result.data)
+  return result.data;
 };
 export default loadImage;
